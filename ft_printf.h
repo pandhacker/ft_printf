@@ -6,28 +6,39 @@
 /*   By: agantaum <agantaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 17:12:46 by agantaum          #+#    #+#             */
-/*   Updated: 2024/11/18 17:28:40 by agantaum         ###   ########.fr       */
+/*   Updated: 2024/11/27 15:40:09 by agantaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FTPRINTF_H
-# define FTPRINTF_H
-# define SET = "cspdiuxX%"
-# include <stdlib.h>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   libft.h                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: agantaum <agantaum@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/11/12 15:22:15 by agantaum          #+#    #+#             */
+/*   Updated: 2024/11/17 13:54:11 by agantaum         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-typedef struct s_list
-{
-	void			*content;
-	struct s_list	*next;
-}				t_list;
+#ifndef FT_PRINTF_H
+# define FT_PRINTF_H
 
-typedef struct s_list_content
-{
-	char    type;
-    void    *arg;
-	size_t  len;
-    size_t  index_string;
-    size_t  index_args;
-}				t_list_content;
+# include <unistd.h>
+# include <stdarg.h>
+# include <stdio.h>
+
+int	ft_strlen(char *s);
+int	is_supported(char c);
+int	ft_get_unilen(unsigned int uni, int len_set);
+int	ft_putnbr_base_ns(unsigned long long int c, char *set);
+int	ft_putnbr(int i);
+int	ft_dochar(int c);
+int	ft_dostr(char *str);
+int	ft_doaddr(void *addr);
+int	ft_doint(int i);
+int	ft_dobase(unsigned long hex, char c);
+int	ft_printf(const char *src, ...);
 
 #endif

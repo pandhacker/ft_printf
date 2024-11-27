@@ -5,56 +5,64 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: agantaum <agantaum@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/18 16:52:30 by agantaum          #+#    #+#             */
-/*   Updated: 2024/11/18 17:35:03 by agantaum         ###   ########.fr       */
+/*   Created: 2024/11/27 11:30:34 by agantaum          #+#    #+#             */
+/*   Updated: 2024/11/27 15:39:51 by agantaum         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_printf.h"
 
-static int  issupported(char c)
+static int	match_list(const char *src, int i, va_list args)
 {
-    size_t  i;
+	int	res;
 
-    i = 0;
-    while (SET[i] != NULL)
-    {
-        if (SET[i] == c)
-            return (1);
-        i++;
-    }
-    return (0);
+	res = 0;
+	if (src[i + 1] == 'c')
+		res = ft_dochar(va_arg(args, int));
+	else if (src[i + 1] == 's')
+		res = ft_dostr(va_arg(args, char *));
+	else if (src[i + 1] == 'p')
+		res = ft_doaddr(va_arg(args, void *));
+	else if (src[i + 1] == 'i' || src[i + 1] == 'd')
+		res = ft_doint(va_arg(args, int));
+	else if (src[i + 1] == 'x' || src[i + 1] == 'X' || src[i + 1] == 'u')
+		res = ft_dobase(va_arg(args, unsigned int), src[i + 1]);
+	else if (src[i + 1] == '%')
+		res = ft_dochar('%');
+	return (res);
 }
 
-static t_list *lst_getreplace(char *s)
+static int	ft_printf_run(const char *src, va_list args)
 {
-    size_t  i;
-    t_list  *lst;
-    t_list  *newnode;
+	int	i;
+	int	res;
 
-    i = 0;
-    lst = NULL;
-    if (s == NULL)
-        return (lst);
-    while (s[i] != '\0')
-    {
-        if(s[i] == '%' && issupported(s[i + 1]))
-        {
-            newnode = ft_lstnew(s[i + 1]);
-            if (newnode == NULL)
-            {
-                ft_lstclear(&lst, free);
-                return (NULL);
-            }
-            ft_lstaddback(&lst, newnode);
-            i++;
-        }
-        i++;
-    }
-    return (lst);
+	i = 0;
+	res = 0;
+	while (src[i] != '\0')
+	{
+		if (src[i] == '%')
+		{
+			if (is_supported(src[i + 1]))
+				res += match_list(src, i, args);
+			else
+				res += write(1, &src[i], 1);
+			i++;
+		}
+		else
+			res += write(1, &src[i], 1);
+		i++;
+	}
+	return (res);
 }
 
-int main()
+int	ft_printf(const char *src, ...)
 {
-    
+	va_list	args;
+	int		res;
+
+	va_start(args, src);
+	res = ft_printf_run(src, args);
+	va_end(args);
+	return (res);
 }
